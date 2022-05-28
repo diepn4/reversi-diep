@@ -217,7 +217,7 @@ io.on('connection', (socket) => {
         });
     });
 
-    socket.on('uninvited', (payload) => {
+    socket.on('uninvite', (payload) => {
         serverLog('Server received a command','\'uninvite\'',JSON.stringify(payload));
         /* Check that the data coming from the client is good */
         if ((typeof payload == 'undefined') || (payload === null)){
@@ -225,7 +225,7 @@ io.on('connection', (socket) => {
             response.result = 'fail';
             response.message = 'client did not send a payload';
             socket.emit('uninvited',response);
-            serverLog('uninvited command failed', JSON.stringify(response));
+            serverLog('uninvite command failed', JSON.stringify(response));
             return;
         }
         let requested_user = payload.requested_user;
@@ -237,7 +237,7 @@ io.on('connection', (socket) => {
                 message : 'client did not request a valid user to uninvite'
             }
             socket.emit('uninvited',response);
-            serverLog('uninvited command failed', JSON.stringify(response));
+            serverLog('uninvite command failed', JSON.stringify(response));
             return;
         }
         if ((typeof room == 'undefined') || (room === null)|| (room === "" )){
@@ -246,7 +246,7 @@ io.on('connection', (socket) => {
                 message : 'the user that was uninvited is not in a room'
             }
             socket.emit('uninvited',response);
-            serverLog('uninvited command failed', JSON.stringify(response));
+            serverLog('uninvite command failed', JSON.stringify(response));
             return;
         }
         if ((typeof username == 'undefined') || (username === null)|| (username === "" )){
@@ -255,7 +255,7 @@ io.on('connection', (socket) => {
                 message : 'the user that was uninvited does not have a name registered'
             }
             socket.emit('uninvited',response);
-            serverLog('uninvited command failed', JSON.stringify(response));
+            serverLog('uninvite command failed', JSON.stringify(response));
             return;
         }
 
