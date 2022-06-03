@@ -242,6 +242,7 @@ let old_board = [
 ];
 
 let my_color ="";
+let interval_timer;
 
 socket.on('game_update', (payload) => {
     if (( typeof payload == 'undefined') || (payload === null)){
@@ -380,6 +381,33 @@ socket.on('game_update', (payload) => {
             
     }
 }
+
+    clearInterval(interval_timer)
+    interval_timer = setInterval(((last_time) => {
+            return (() => {
+                let d = new Date();
+                let elapsed_m = d.getTime() - last_time;
+                let minutes = Math.floor(elapsed_m / (60 * 1000));
+                let seconds = Math.floor((elapsed_m % (60 * 1000)) / 1000);
+                let total = minutes * 60 + seconds;
+                if (total > 100) {
+                    total = 100;
+                }
+                $("#elapsed").css("width", total + "%").attr("aria-valuenow", total);
+                let timestring = "" + seconds;
+                timestring = timestring.padStart(2, '0');
+                timestring = minutes + ":" + timestring;
+                if (total < 100) {
+                    $("#elapsed").html(timestring);
+                } 
+                else {
+                    $("#elapsed").html("Times up!");
+                }
+            })
+
+    })(payload.game.last_move_time)
+        , 1000);
+
     $("#mintsum").html(mintsum);
     $("#purplesum").html(purplesum);
 

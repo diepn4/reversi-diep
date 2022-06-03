@@ -582,6 +582,10 @@ io.on('connection', (socket) => {
             game.legal_moves = calculate_legal_moves('m', game.board);
         }
 
+        let d = new Date();
+        game.last_move_time = d.getTime();
+        
+
         send_game_update(socket, game_id, 'played a token');
  });
 
