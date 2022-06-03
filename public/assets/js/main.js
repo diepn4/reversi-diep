@@ -271,7 +271,30 @@ socket.on('game_update', (payload) => {
         return;
     }
 
-    $("#my_color").html('<h3 id="my_color">I am '+my_color+'</h3>');
+    if( my_color === 'mint'){
+        $("#my_color").html('<h3 id="my_color">I am mint</h3>');
+
+    }
+    else if( my_color === 'purple'){
+        $("#my_color").html('<h3 id="my_color">I am purple</h3>');
+    }
+    else{
+        $("#my_color").html('<h3 id="my_color">Error: I don\'t know what color I am</h3>');
+
+    }
+
+    if( payload.game.whose_turn === 'mint'){
+        $("#my_color").append('<h4>It is mint\'s turn</h4>');
+
+    }
+    else if( payload.game.whose_turn === 'purple'){
+        $("#my_color").append('<h4>It is purple\'s turn</h4>');
+    }
+    else{
+        $("#my_color").append('<h4>Error: Don\'t know whose turn it is</h4>');
+
+    }
+
 
     let mintsum= 0;
     let purplesum= 0;
@@ -334,29 +357,29 @@ socket.on('game_update', (payload) => {
 
                 const t = Date.now();
                 $('#' + row + '_' + column).html('<img class="img-fluid" src="assets/images/' + graphic + '?time=' + t + '" alt="' + altTag + '" />');
-                
-                $('#' + row + '_' + column).off('click');
-                if (board[row][column] === ' ') {
-                    $('#' + row + '_' + column).addClass('hovered_over');
-                    $('#' + row + '_' + column).click(((r, c) => {
-                        return ( () => {
-                            let payload = {
-                                row: r,
-                                column: c,
-                                color: my_color
-                            };
-                            console.log('**** Client log message, sending \'play_token\' command: '+JSON.stringify(payload));
-                            socket.emit('play_token', payload);
-                        });
-                    })(row,column));
-                }
-                else{
-                    console.log('bar')
-                    $('#' + row + '_' + column).removeClass('hovered_over');
-                }
             }
+            /* Set up interactivity */
+            $('#' + row + '_' + column).off('click');
+            $('#' + row + '_' + column).removeClass('hovered_over');
+            if(payload.game.whose_turn === my_color){
+                if(payload.game.legal_moves[row][column] === my_color.substr(0,1)) {
+                $('#' + row + '_' + column).addClass('hovered_over');
+                $('#' + row + '_' + column).click(((r, c) => {
+                    return ( () => {
+                        let payload = {
+                            row: r,
+                            column: c,
+                            color: my_color
+                        };
+                        console.log('**** Client log message, sending \'play_token\' command: '+JSON.stringify(payload));
+                        socket.emit('play_token', payload);
+                    });
+                })(row,column));
+            }       
         }
+            
     }
+}
     $("#mintsum").html(mintsum);
     $("#purplesum").html(purplesum);
 
@@ -371,6 +394,7 @@ socket.on('play_token_response', (payload) => {
     }
     if(payload.result === 'fail'){
         console.log(payload.message);
+        alert(payload.message);
         return;
     }
 })
