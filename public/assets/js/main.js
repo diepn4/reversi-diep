@@ -197,7 +197,7 @@ socket.on('player_disconnected', (payload) => {
         console.log('Server did not send a payload');
         return;
     }
-    let newHTML = '<p class=\'left_room_response\'>' + payload.username + ' left the '+ payload.room + '. (There are ' + payload.count + ' users in this room)</p>';
+    let newHTML = '<p class=\'left_room_response\'>' + payload.username + ' left the chat room. (There are ' + payload.count + ' users in this room)</p>';
     let newNode = $(newHTML);
     newNode.hide();
     $('#messages').prepend(newNode);
